@@ -5,8 +5,6 @@ $(document).ready(function() {
 
     function fetchData(field, chartId, statusId) {
         $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/${field}.json?api_key=${apiKey}&results=20`, function(data) {
-            console.log(`Datos recibidos para ${chartId}:`, data);
-
             const labels = [];
             const values = [];
             data.feeds.forEach(feed => {
@@ -68,11 +66,9 @@ $(document).ready(function() {
         const threshold = 50;
 
         if (latestValue > threshold) {
-            $(`#${statusId}`).text('Estado: Lleno');
-            $(`#${statusId}`).css('color', 'green');
+            $(`#${statusId}`).text('Estado: Lleno').addClass('green').removeClass('red');
         } else {
-            $(`#${statusId}`).text('Estado: Vacío');
-            $(`#${statusId}`).css('color', 'red');
+            $(`#${statusId}`).text('Estado: Vacío').addClass('red').removeClass('green');
         }
     }
 
