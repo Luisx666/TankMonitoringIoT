@@ -5,6 +5,8 @@ $(document).ready(function() {
 
     function fetchData(field, chartId, statusId) {
         $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/${field}.json?api_key=${apiKey}&results=20`, function(data) {
+            console.log(`Datos recibidos para ${chartId}:`, data);
+
             const labels = [];
             const values = [];
             data.feeds.forEach(feed => {
@@ -14,6 +16,8 @@ $(document).ready(function() {
 
             updateChart(labels, values, chartId);
             updateStatus(values, statusId);
+        }).fail(function() {
+            console.error(`Error al obtener datos para ${chartId}`);
         });
     }
 
