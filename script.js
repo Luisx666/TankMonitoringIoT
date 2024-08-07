@@ -11,7 +11,7 @@ $(document).ready(function() {
             const values = [];
             data.feeds.forEach(feed => {
                 labels.push(new Date(feed.created_at).toLocaleTimeString());
-                values.push(feed[`field${field}`]);
+                values.push(feed[`field${field.slice(-1)}`]);
             });
 
             updateChart(labels, values, chartId);
@@ -77,9 +77,9 @@ $(document).ready(function() {
     }
 
     function fetchDataForAll() {
-        fetchData(1, 'tankLevelChart1', 'status1');
-        fetchData(2, 'tankLevelChart2', 'status2');
-        fetchData(3, 'tankLevelChart3', 'status3');
+        fetchData('field1', 'tankLevelChart1', 'status1');
+        fetchData('field2', 'tankLevelChart2', 'status2');
+        fetchData('field3', 'tankLevelChart3', 'status3');
     }
 
     setTimeout(function() {
