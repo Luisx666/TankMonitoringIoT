@@ -1,7 +1,7 @@
 $(document).ready(function() {
     const apiKey = 'G5GFTUZGVXHG1ZCK';
     const channelId = '2619491';
-    const fieldId = 'Monitor de tanque 1';
+    const fieldId = 'field1';
 
     function fetchData() {
         $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/1.json?api_key=${apiKey}&results=20`, function(data) {
@@ -29,8 +29,8 @@ $(document).ready(function() {
                 datasets: [{
                     label: 'Nivel del Tanque',
                     data: values,
-                    borderColor: 'rgba(123, 104, 238, 1)',
-                    backgroundColor: 'rgba(123, 104, 238, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
                     borderWidth: 2,
                     fill: true,
                     tension: 0.4
