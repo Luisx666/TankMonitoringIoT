@@ -1,7 +1,7 @@
 $(document).ready(function() {
     const apiKey = 'G5GFTUZGVXHG1ZCK';
     const channelId = '2619491';
-    const fieldId = 'field1';
+    const fieldId = 'Monitor de tanque 1';
 
     function fetchData() {
         $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/1.json?api_key=${apiKey}&results=20`, function(data) {
