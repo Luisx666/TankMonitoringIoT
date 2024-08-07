@@ -1,7 +1,7 @@
 $(document).ready(function() {
-    const apiKey = 'G5GFTUZGVXHG1ZCK'; // Clave API de lectura de ThingSpeak
-    const channelId = '2619491'; // ID del Canal de ThingSpeak
-    const fieldId = 'field1'; // Reemplaza con el campo que estés usando
+    const apiKey = 'G5GFTUZGVXHG1ZCK';
+    const channelId = '2619491';
+    const fieldId = 'field1';
 
     function fetchData() {
         $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/1.json?api_key=${apiKey}&results=20`, function(data) {
@@ -27,7 +27,7 @@ $(document).ready(function() {
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Tank Level',
+                    label: 'Nivel del Tanque',
                     data: values,
                     borderColor: 'rgba(123, 104, 238, 1)',
                     backgroundColor: 'rgba(123, 104, 238, 0.2)',
@@ -42,7 +42,7 @@ $(document).ready(function() {
                         display: true,
                         title: {
                             display: true,
-                            text: 'Time',
+                            text: 'Hora',
                             color: '#7d5ba6'
                         }
                     },
@@ -50,7 +50,7 @@ $(document).ready(function() {
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Level',
+                            text: 'Nivel',
                             color: '#7d5ba6'
                         }
                     }
@@ -61,17 +61,21 @@ $(document).ready(function() {
 
     function updateStatus(values) {
         const latestValue = values[values.length - 1];
-        const threshold = 50; // Define el umbral para "lleno" o "vacío"
+        const threshold = 50;
 
         if (latestValue > threshold) {
-            $('#status').text('Status: Full');
-            $('#status').css('color', '#32cd32');
+            $('#status').text('Estado: Lleno');
+            $('#status').css('color', 'green');
         } else {
-            $('#status').text('Status: Empty');
-            $('#status').css('color', '#ff6347');
+            $('#status').text('Estado: Vacío');
+            $('#status').css('color', 'red');
         }
     }
 
-    fetchData();
-    setInterval(fetchData, 15000); // Actualiza cada 15 segundos
+    setTimeout(function() {
+        $('#loading-screen').fadeOut();
+        $('#main-content').fadeIn();
+        fetchData();
+        setInterval(fetchData, 15000);
+    }, 15000);
 });

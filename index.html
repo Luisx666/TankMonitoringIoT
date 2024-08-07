@@ -1,48 +1,24 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tank Monitoring IoT</title>
+    <title>Monitoreo de Tanque IoT</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #e6f7ff;
-            margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            color: #333;
-        }
-        h1 {
-            color: #7d5ba6;
-        }
-        #status {
-            font-size: 1.5em;
-            margin-top: 20px;
-        }
-        .container {
-            background-color: #ffffff;
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        canvas {
-            margin-top: 20px;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Tank Monitoring IoT</h1>
+    <div id="loading-screen">
+        <img src="LOGO.png" alt="Logo" class="loading-logo">
+    </div>
+    <div id="main-content" class="container" style="display: none;">
+        <img src="LOGO.png" alt="Logo" class="logo">
+        <h1>Monitoreo de Tanque IoT</h1>
         <canvas id="tankLevelChart" width="400" height="200"></canvas>
-        <div id="status">Status: Loading...</div>
+        <div id="status">Estado: Cargando...</div>
     </div>
     <script src="script.js"></script>
 </body>
 </html>
+
