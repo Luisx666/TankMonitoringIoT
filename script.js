@@ -1,35 +1,33 @@
 $(document).ready(function() {
     const apiKey = 'G5GFTUZGVXHG1ZCK';
     const channelId = '2619491';
-    const fields = ['field1', 'field2', 'field3'];
+    const fieldId = 'field1';
 
-    function fetchData(field, chartId, statusId) {
-        $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/${field}.json?api_key=${apiKey}&results=20`, function(data) {
+    function fetchData() {
+        $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/1.json?api_key=${apiKey}&results=20`, function(data) {
             const labels = [];
             const values = [];
             data.feeds.forEach(feed => {
                 labels.push(new Date(feed.created_at).toLocaleTimeString());
-                values.push(feed[`field${field.slice(-1)}`]);
+                values.push(feed[fieldId]);
             });
 
-            updateChart(labels, values, chartId);
-            updateStatus(values, statusId);
-        }).fail(function() {
-            console.error(`Error al obtener datos para ${chartId}`);
+            updateChart(labels, values);
+            updateStatus(values);
         });
     }
 
-    function updateChart(labels, values, chartId) {
-        const ctx = document.getElementById(chartId).getContext('2d');
-        if (window[chartId]) {
-            window[chartId].destroy();
+    function updateChart(labels, values) {
+        const ctx = document.getElementById('tankLevelChart').getContext('2d');
+        if (window.tankChart) {
+            window.tankChart.destroy();
         }
-        window[chartId] = new Chart(ctx, {
+        window.tankChart = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: `Nivel del Tanque ${chartId.slice(-1)}`,
+                    label: 'Nivel del Tanque',
                     data: values,
                     borderColor: 'rgba(123, 104, 238, 1)',
                     backgroundColor: 'rgba(123, 104, 238, 0.2)',
@@ -61,27 +59,23 @@ $(document).ready(function() {
         });
     }
 
-    function updateStatus(values, statusId) {
+    function updateStatus(values) {
         const latestValue = values[values.length - 1];
         const threshold = 50;
 
         if (latestValue > threshold) {
-            $(`#${statusId}`).text('Estado: Lleno').addClass('green').removeClass('red');
+            $('#status').text('Estado: Lleno');
+            $('#status').css('color', 'green');
         } else {
-            $(`#${statusId}`).text('Estado: Vacío').addClass('red').removeClass('green');
+            $('#status').text('Estado: Vacío');
+            $('#status').css('color', 'red');
         }
-    }
-
-    function fetchDataForAll() {
-        fetchData('field1', 'tankLevelChart1', 'status1');
-        fetchData('field2', 'tankLevelChart2', 'status2');
-        fetchData('field3', 'tankLevelChart3', 'status3');
     }
 
     setTimeout(function() {
         $('#loading-screen').fadeOut();
         $('#main-content').fadeIn();
-        fetchDataForAll();
-        setInterval(fetchDataForAll, 15000);
+        fetchData();
+        setInterval(fetchData, 15000);
     }, 15000);
 });
