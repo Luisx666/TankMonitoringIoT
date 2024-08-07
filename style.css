@@ -2,6 +2,8 @@ body {
     font-family: Arial, sans-serif;
     background-color: #f0f8ff;
     color: #333;
+    margin: 0;
+    padding: 0;
 }
 
 #loading-screen {
@@ -11,12 +13,21 @@ body {
     justify-content: center;
     height: 100vh;
     background-color: #f0f8ff;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
 }
 
 #loading-logo {
     width: 200px;
     height: 200px;
     border-radius: 50%;
+}
+
+#main-content {
+    display: none;
+    padding: 20px;
 }
 
 #main-content header {
@@ -60,10 +71,10 @@ h2 {
     margin-top: 10px;
 }
 
-#status1.green, #status2.green, #status3.green {
+.green {
     color: green;
 }
 
-#status1.red, #status2.red, #status3.red {
+.red {
     color: red;
 }
