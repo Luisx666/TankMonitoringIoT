@@ -1,33 +1,33 @@
 $(document).ready(function() {
     const apiKey = 'G5GFTUZGVXHG1ZCK';
     const channelId = '2619491';
-    const fieldId = 'field1';
+    const fields = ['field1', 'field2', 'field3'];
 
-    function fetchData() {
-        $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/1.json?api_key=${apiKey}&results=20`, function(data) {
+    function fetchData(field, chartId, statusId) {
+        $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/${field}.json?api_key=${apiKey}&results=20`, function(data) {
             const labels = [];
             const values = [];
             data.feeds.forEach(feed => {
                 labels.push(new Date(feed.created_at).toLocaleTimeString());
-                values.push(feed[fieldId]);
+                values.push(feed[`field${field}`]);
             });
 
-            updateChart(labels, values);
-            updateStatus(values);
+            updateChart(labels, values, chartId);
+            updateStatus(values, statusId);
         });
     }
 
-    function updateChart(labels, values) {
-        const ctx = document.getElementById('tankLevelChart').getContext('2d');
-        if (window.tankChart) {
-            window.tankChart.destroy();
+    function updateChart(labels, values, chartId) {
+        const ctx = document.getElementById(chartId).getContext('2d');
+        if (window[chartId]) {
+            window[chartId].destroy();
         }
-        window.tankChart = new Chart(ctx, {
+        window[chartId] = new Chart(ctx, {
             type: 'line',
             data: {
                 labels: labels,
                 datasets: [{
-                    label: 'Nivel del Tanque',
+                    label: `Nivel del Tanque ${chartId.slice(-1)}`,
                     data: values,
                     borderColor: 'rgba(123, 104, 238, 1)',
                     backgroundColor: 'rgba(123, 104, 238, 0.2)',
@@ -59,23 +59,29 @@ $(document).ready(function() {
         });
     }
 
-    function updateStatus(values) {
+    function updateStatus(values, statusId) {
         const latestValue = values[values.length - 1];
         const threshold = 50;
 
         if (latestValue > threshold) {
-            $('#status').text('Estado: Lleno');
-            $('#status').css('color', 'green');
+            $(`#${statusId}`).text('Estado: Lleno');
+            $(`#${statusId}`).css('color', 'green');
         } else {
-            $('#status').text('Estado: Vacío');
-            $('#status').css('color', 'red');
+            $(`#${statusId}`).text('Estado: Vacío');
+            $(`#${statusId}`).css('color', 'red');
         }
+    }
+
+    function fetchDataForAll() {
+        fetchData(1, 'tankLevelChart1', 'status1');
+        fetchData(2, 'tankLevelChart2', 'status2');
+        fetchData(3, 'tankLevelChart3', 'status3');
     }
 
     setTimeout(function() {
         $('#loading-screen').fadeOut();
         $('#main-content').fadeIn();
-        fetchData();
-        setInterval(fetchData, 15000);
+        fetchDataForAll();
+        setInterval(fetchDataForAll, 15000);
     }, 15000);
 });
