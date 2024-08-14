@@ -61,9 +61,9 @@ $(document).ready(function() {
 
     function updateStatus(values) {
         const latestValue = values[values.length - 1];
-        const threshold = 50;
+        const threshold = 5; // Modificado a 5 cm o menos para marcar "Lleno"
 
-        if (latestValue > threshold) {
+        if (latestValue <= threshold) {
             $('#status').text('Estado: Lleno');
             $('#status').css('color', 'green');
         } else {
