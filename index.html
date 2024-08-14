@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitoreo de Tanque IIoT</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loading-screen">
+        <h1>Monitoreo de Tanque IIoT</h1>
+        <img src="LOGO.png" alt="Logo" class="loading-logo">
+    </div>
+    <div id="main-content" class="container" style="display: none;">
+        <div class="logo-container">
+            <img src="LOGO.png" alt="Logo" class="logo">
+        </div>
+        <h1>Monitoreo de Tanque IIoT</h1>
+        <canvas id="tankLevelChart" width="400" height="200"></canvas>
+        <div id="status">Estado: Cargando...</div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
