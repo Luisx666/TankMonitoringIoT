@@ -1,48 +1,81 @@
 $(document).ready(function() {
-    // Simula la carga de contenido
-    setTimeout(function() {
-        $('#loading-screen').fadeOut(500, function() {
-            $('#main-content').fadeIn(500);
-        });
-    }, 2000);
+    const apiKey = 'G5GFTUZGVXHG1ZCK';
+    const channelId = '2619491';
+    const fieldId = 'field1';
 
-    // Configuración de Chart.js para el monitoreo de nivel de tanque
-    var ctx = document.getElementById('tankLevelChart').getContext('2d');
-    var tankLevelChart = new Chart(ctx, {
-        type: 'line',
-        data: {
-            labels: [], // Etiquetas de tiempo
-            datasets: [{
-                label: 'Nivel del Tanque (cm)',
-                data: [], // Datos de nivel de tanque
-                borderColor: '#7d5ba6',
-                fill: false
-            }]
-        },
-        options: {
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    max: 100
+    function fetchData() {
+        $.getJSON(`https://api.thingspeak.com/channels/${channelId}/fields/1.json?api_key=${apiKey}&results=20`, function(data) {
+            const labels = [];
+            const values = [];
+            data.feeds.forEach(feed => {
+                labels.push(new Date(feed.created_at).toLocaleTimeString());
+                values.push(feed[fieldId]);
+            });
+
+            updateChart(labels, values);
+            updateStatus(values);
+        });
+    }
+
+    function updateChart(labels, values) {
+        const ctx = document.getElementById('tankLevelChart').getContext('2d');
+        if (window.tankChart) {
+            window.tankChart.destroy();
+        }
+        window.tankChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nivel del Tanque',
+                    data: values,
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Hora',
+                            color: '#7d5ba6'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: 'Nivel',
+                            color: '#7d5ba6'
+                        }
+                    }
                 }
             }
-        }
-    });
-
-    function updateChart(data) {
-        tankLevelChart.data.labels.push(new Date().toLocaleTimeString());
-        tankLevelChart.data.datasets[0].data.push(data);
-        tankLevelChart.update();
-    }
-
-    function fetchTankLevel() {
-        $.getJSON('https://api.thingspeak.com/channels/CHANNEL_ID/fields/1.json?api_key=API_KEY&results=1', function(response) {
-            var tankLevel = parseFloat(response.feeds[0].field1);
-            $('#status').text('Nivel del Tanque: ' + tankLevel + ' cm');
-            updateChart(tankLevel);
         });
     }
 
-    // Actualiza el nivel del tanque cada 15 segundos
-    setInterval(fetchTankLevel, 15000);
+    function updateStatus(values) {
+        const latestValue = values[values.length - 1];
+        const threshold = 50;
+
+        if (latestValue > threshold) {
+            $('#status').text('Estado: Lleno');
+            $('#status').css('color', 'green');
+        } else {
+            $('#status').text('Estado: Vacío');
+            $('#status').css('color', 'red');
+        }
+    }
+
+    setTimeout(function() {
+        $('#loading-screen').fadeOut();
+        $('#main-content').fadeIn();
+        fetchData();
+        setInterval(fetchData, 15000);
+    }, 15000);
 });
